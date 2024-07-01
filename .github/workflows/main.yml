@@ -1,0 +1,47 @@
+name: Build DLL
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Visual Studio
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x86
+
+    - name: Install dependencies
+      run: |
+        vcpkg install websocketpp
+        vcpkg install asio
+        vcpkg integrate install
+
+    - name: Build project
+      run: |
+        mkdir build
+        cd build
+        cmake .. -G "Visual Studio 16 2019" -A x86
+        cmake --build . --config Release
+        cmake --install . --prefix install
+
+    - name: Package DLL
+      run: |
+        mkdir -p artifact
+        cp build/Release/*.dll artifact/
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: socket.io-client-cpp-dll
+        path: artifact
