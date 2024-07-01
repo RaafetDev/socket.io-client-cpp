@@ -4,7 +4,7 @@ version: 1.0.{build}
 # Define the build matrix
 environment:
   matrix:
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
 # Install dependencies
 install:
