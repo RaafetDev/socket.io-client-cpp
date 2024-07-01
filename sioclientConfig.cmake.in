@@ -1,5 +1,6 @@
 
 @PACKAGE_INIT@
+
 include(CMakeFindDependencyMacro)
 @_find_dependency_calls@
 
