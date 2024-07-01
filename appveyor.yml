@@ -1,0 +1,32 @@
+# appveyor.yml
+version: 1.0.{build}
+
+# Define the build matrix
+environment:
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+
+# Install dependencies
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - git clone --recurse-submodules https://github.com/your-username/socket.io-client-cpp.git
+  - cd socket.io-client-cpp
+  - git submodule update --init --recursive
+
+# Build script
+build_script:
+  - mkdir build
+  - cd build
+  - cmake -G "Visual Studio 16 2019" -A x64 ..
+  - cmake --build . --config Release --target ALL_BUILD
+
+# Artifact settings
+artifacts:
+  - path: build/Release/socket.io-client-cpp.dll
+    name: SocketIOClientDLL
+
+# Notification settings (optional)
+notifications:
+  - provider: Email
+    to:
+      - your-email@example.com
